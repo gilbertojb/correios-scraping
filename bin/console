@@ -1,10 +1,9 @@
 #!/usr/bin/env php
 <?php
 
-use Correios\Scraper\Command\PostcodeTracksCommand;
-
 require dirname(__DIR__) . '/vendor/autoload.php';
 
+use Correios\Scraper\Command\PostcodeTracksCommand;
 use Symfony\Component\Console\Application;
 
 $application = new Application('Correios Scraper');

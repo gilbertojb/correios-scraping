@@ -47,10 +47,10 @@ class PostcodeTracksCommand extends Command
         $browser = new HttpBrowser(HttpClient::create());
 
         foreach ($statesOption as $state) {
-            $spinner = new SpinnerProgress($output, 1000);
+            $spinner = new SpinnerProgress($output);
             $spinner->setMessage("Extracting data from {$state}");
 
-            $file = fopen(dirname(__DIR__) . "/../data/{$state}.json", 'w');
+            $spinner->start();
 
             $crawler = $browser->request('POST', self::$url, ['UF' => $state]);
 
@@ -68,10 +68,13 @@ class PostcodeTracksCommand extends Command
                 $hasNextPage = $this->hasNextPage($crawler);
             }
 
+            $file = fopen(dirname(__DIR__) . "/../data/{$state}.json", 'w');
             fwrite($file, json_encode(array_values($result), JSON_UNESCAPED_UNICODE));
             fclose($file);
 
             $spinner->finish();
+
+            sleep(rand(2, 4));
         }
 
         return Command::SUCCESS;
