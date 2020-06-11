@@ -1,13 +1,28 @@
 {
-    "name": "tiendanube/correios-scraping",
-    "description": "Web scraping project to extract data from Correios",
-    "type": "project",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Gilberto Pereira",
-            "email": "gilberto.pereira@tiendanube.com"
-        }
-    ],
-    "require": {}
+  "name": "tiendanube/correios-scraping",
+  "description": "Web scraping project to extract data from Correios",
+  "type": "project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Gilberto Pereira",
+      "email": "gilberto.pereira@tiendanube.com"
+    }
+  ],
+  "require": {
+    "symfony/console": "^5.1",
+    "symfony/http-client": "^5.1",
+    "symfony/browser-kit": "^5.1",
+    "symfony/mime": "^5.1",
+    "symfony/css-selector": "^5.1",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Correios\\Scraper\\": "src/"
+    }
+  },
+  "config": {
+    "optimize-autoloader": true
+  }
 }
