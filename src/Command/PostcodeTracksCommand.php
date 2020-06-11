@@ -74,7 +74,7 @@ class PostcodeTracksCommand extends Command
 
             $spinner->finish();
 
-            sleep(rand(2, 4));
+            sleep(2);
         }
 
         return Command::SUCCESS;
