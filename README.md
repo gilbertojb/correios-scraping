@@ -20,6 +20,11 @@ Extract data from all states:
 $ bin/console tracks:extract
 ```
 
+Set the output file format: Default: `json`.
+```bash
+$ bin/console tracks:extract -o csv
+```
+
 Extract data from all states:
 ```bash
 $ bin/console tracks:extract -s SP
