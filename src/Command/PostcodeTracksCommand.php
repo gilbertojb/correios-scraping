@@ -7,7 +7,6 @@ use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DomCrawler\Crawler;
@@ -66,6 +65,8 @@ class PostcodeTracksCommand extends Command
 
         $browser = new HttpBrowser(HttpClient::create());
 
+        shuffle($statesOption);
+
         foreach ($statesOption as $state) {
             $spinner = new SpinnerProgress($output);
             $spinner->setMessage("Extracting data from {$state}");
@@ -92,7 +93,7 @@ class PostcodeTracksCommand extends Command
 
             $spinner->finish();
 
-            sleep(2);
+            sleep(rand(2, 4));
         }
 
         return Command::SUCCESS;
@@ -122,18 +123,20 @@ class PostcodeTracksCommand extends Command
             $cell = $row->filter('td');
 
             if ($cell->count()) {
-                $place = trim($cell->eq(0)->text());
-                $track = trim($cell->eq(1)->text());
+                $locality = trim($cell->eq(0)->text());
+                $track    = trim($cell->eq(1)->text());
+                $type     = trim($cell->eq(3)->text());
 
-                list($start, $finish) = explode(' a ', $track);
+                list($start, $end) = explode(' a ', $track);
 
                 $identifier = md5($track);
 
                 $return[$identifier] = [
-                    'state'  => $state,
-                    'place'  => $place,
-                    'start'  => str_replace('-', '', $start),
-                    'finish' => str_replace('-', '', $finish),
+                    'state'    => $state,
+                    'locality' => $locality,
+                    'start'    => str_replace('-', '', $start),
+                    'end'      => str_replace('-', '', $end),
+                    'type'     => $type,
                 ];
 
                 $spinner->advance();
@@ -160,7 +163,7 @@ class PostcodeTracksCommand extends Command
             $file = fopen(dirname(__DIR__) . "/../data/{$fileName}.csv", 'w');
 
             fputs($file, $bom =( chr(0xEF) . chr(0xBB) . chr(0xBF) )); // make UTF-8 from excel
-            fwrite($file, implode(',', ['state', 'place', 'start', 'finish']) . PHP_EOL); // header
+            fwrite($file, implode(',', ['state', 'locality', 'start', 'end', 'type']) . PHP_EOL); // header
 
             foreach (array_values($data) as $row) {
                 fwrite($file, implode(',', $row) . PHP_EOL);
